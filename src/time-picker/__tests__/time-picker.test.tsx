@@ -119,14 +119,20 @@ describe('Timepicker 组件测试', () => {
 
   it('click to pick', async () => {
     const handleChange = vi.fn();
-    const { container } = render(<TimePicker defaultValue="00:00:00" onChange={handleChange}></TimePicker>);
+    const handleOpen = vi.fn();
+    const handlePick = vi.fn();
+    const { container } = render(
+      <TimePicker defaultValue="00:00:00" onChange={handleChange} onOpen={handleOpen} onPick={handlePick}></TimePicker>,
+    );
     fireEvent.click(document.querySelector('input'));
+    expect(handleOpen).toBeCalledTimes(1);
     await waitFor(async () => {
       const confirmBtn = document.querySelectorAll('.t-time-picker__panel button').item(0);
       expect(confirmBtn).toBeInTheDocument();
       const panelItem1 = document.querySelectorAll('.t-time-picker__panel-body-scroll').item(0);
       // await fireEvent.scroll(panelItem1, { target: { scrollY: 24 } });
       fireEvent.click(panelItem1.querySelectorAll('.t-time-picker__panel-body-scroll-item').item(1));
+      expect(handlePick).toHaveBeenCalled(1);
       fireEvent.click(confirmBtn);
       expect(container.querySelectorAll('input').item(0)).toHaveValue('01:00:00');
       expect(handleChange).toHaveBeenCalled(1);
