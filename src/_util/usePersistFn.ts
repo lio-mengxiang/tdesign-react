@@ -11,7 +11,6 @@ export type Noop = (...args: any[]) => any;
  */
 export function usePersistFn<T extends Noop>(fn: T) {
   const fnRef = useRef<T>(fn);
-  fnRef.current = fn;
 
   const persistFn = useRef<T>();
   if (!persistFn.current) {
